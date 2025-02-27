@@ -3,6 +3,9 @@ import os
 import re
 import sys
 
+def read_enum_instructions(filename):
+    with open(filename, 'r') as file:
+        return f"\n\nWhere the {filename.removesuffix(".csv").removeprefix('./lookup/')} is described in this csv:\n{file.read()}\n\n"
 
 
 def query_chatgpt(question):
@@ -19,15 +22,15 @@ def query_chatgpt(question):
     with open('./schemas/dim.accounts.txt', 'r') as file:
         dim_accounts = file.read()
 
-    with open('./schemas/enum.customer_kinds.csv', 'r') as file:
-        enum_customer_kinds = file.read()
-
-    with open('./schemas/lookup.plan_segments.csv', 'r') as file:
-        lookup_plan_segments = file.read()
+ 
+    appendix = ""
+    appendix += read_enum_instructions('./lookup/active_component.csv')
+    appendix += read_enum_instructions('./lookup/customer_kinds.csv')
+    appendix += read_enum_instructions('./lookup/plan_segments.csv')
 
     # Define the conversation
     messages = [
-        {"role": "system", "content": f"{instructions}\n\nBased on the following schema:\n\n{dim_accounts}\n\nWhere the customers_kinds are described in this csv:\n{enum_customer_kinds}\n\nAnd plan_segments are descibed here:\n{lookup_plan_segments}"},
+        {"role": "system", "content": f"{instructions}\n\nBased on the following schema:\n\n{dim_accounts}\n\n{appendix}"},
         {"role": "user", "content": f"{question}"},
 
     ]
@@ -37,7 +40,7 @@ def query_chatgpt(question):
         model="gpt-4o",
         messages=messages,
         max_tokens=5000,
-        temperature=0.7
+        temperature=0.2
     )
     return response
 
