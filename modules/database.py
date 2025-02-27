@@ -34,6 +34,11 @@ def query_snowflake(sql):
         results = cursor.fetchall()
         columns = [column[0] for column in cursor.description]
 
+    except snowflake.connector.Error as e:
+        print(f"Error executing SQL query: {e}")
+        columns = []
+        results = []
+
     finally:
         # Close the cursor and connection
         cursor.close()
