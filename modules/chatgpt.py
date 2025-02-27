@@ -11,16 +11,23 @@ def query_chatgpt(question):
     client = openai.OpenAI(api_key=api_key)
 
 
-    # Read the content of the file
-    with open('./schemas/dim.accounts.txt', 'r') as file:
-        file_content = file.read()
-
+    # Read the instruciton files of the file
     with open('./instructions.txt', 'r') as file:
         instructions = file.read()
 
+
+    with open('./schemas/dim.accounts.txt', 'r') as file:
+        dim_accounts = file.read()
+
+    with open('./schemas/enum.customer_kinds.csv', 'r') as file:
+        enum_customer_kinds = file.read()
+
+    with open('./schemas/lookup.plan_segments.csv', 'r') as file:
+        lookup_plan_segments = file.read()
+
     # Define the conversation
     messages = [
-        {"role": "system", "content": f"{instructions}\n\nBased on the following schema:\n\n{file_content}"},
+        {"role": "system", "content": f"{instructions}\n\nBased on the following schema:\n\n{dim_accounts}\n\nWhere the customers_kinds are described in this csv:\n{enum_customer_kinds}\n\nAnd plan_segments are descibed here:\n{lookup_plan_segments}"},
         {"role": "user", "content": f"{question}"},
 
     ]

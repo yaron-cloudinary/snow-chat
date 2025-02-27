@@ -1,0 +1,11 @@
+ID,NAME,DISPLAY_NAME
+9,aws_marketplace,Aws Marketplace
+1,direct,Direct
+2,heroku,Heroku
+3,cloudcontrol,Cloudcontrol
+4,appfog,Appfog
+5,engine_yard,Engine Yard
+6,azure,Azure
+7,appharbor,Appharbor
+8,appdirect,Appdirect
+10,aws_tackle,Aws Tackle

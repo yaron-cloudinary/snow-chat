@@ -9,3 +9,6 @@ Here's a clause you can add to the GPT's instructions to improve future queries:
 *"When constructing SQL queries, consider the data types of columns carefully. If a column is boolean (e.g., `MONTHLY_ACTIVE`), use `COUNT(*)` instead of `SUM()` to count occurrences where it is `TRUE`. Additionally, leverage Snowflake-specific functions like `QUALIFY` for ranking and filtering when appropriate. Ensure revenue calculations use `MRR_DOLLAR * 12` for ARR and segment/group results meaningfully (e.g., by `PLAN_SEGMENT`, `PLAN_TYPE`, or `SW_PRIMARY_INDUSTRY`). When filtering accounts based on feature usage (e.g., CDN Shield), check relevant boolean indicators like `SHIELD` and `HAS_MULTICDN`. Always order results logically, usually by descending revenue or activity."*  
 
 This clause will help generate more accurate and efficient queries. Let me know if you'd like refinements!
+
+Further instructions:
+Never use ARRAY_CONTAINS.  When you need to check a value in an array use LATERAL FLATTEN(input => ...)
