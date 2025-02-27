@@ -3,9 +3,17 @@ import os
 import re
 import sys
 
-def read_enum_instructions(filename):
-    with open(filename, 'r') as file:
-        return f"\n\nWhere the {filename.removesuffix(".csv").removeprefix('./lookup/')} is described in this csv:\n{file.read()}\n\n"
+def read_lookup_file_instructions(foldername, filename):
+    with open(f'{foldername}/{filename}', 'r') as file:
+        return f"\nWhere the {filename.removesuffix(".csv").removeprefix('./lookup/')} is described in this csv:\n{file.read()}\n"
+
+
+def read_lookup_folder_instructions(foldername):
+    appendix = ""
+    for filename in os.listdir(foldername):
+        if filename.endswith(".csv"):
+            appendix += read_lookup_file_instructions(foldername, filename)
+    return appendix
 
 
 def query_chatgpt(question):
@@ -23,10 +31,7 @@ def query_chatgpt(question):
         dim_accounts = file.read()
 
  
-    appendix = ""
-    appendix += read_enum_instructions('./lookup/active_component.csv')
-    appendix += read_enum_instructions('./lookup/customer_kinds.csv')
-    appendix += read_enum_instructions('./lookup/plan_segments.csv')
+    appendix = read_lookup_folder_instructions('./lookup')
 
     # Define the conversation
     messages = [
@@ -40,7 +45,7 @@ def query_chatgpt(question):
         model="gpt-4o",
         messages=messages,
         max_tokens=5000,
-        temperature=0.2
+        temperature=0.7
     )
     return response
 
