@@ -34,7 +34,7 @@ python SnowChatCLI.py -p "Who are the top 5 customers who increased their mrr si
 
 Writing to a markup file
 ```
-python -u snowchatcli.py -p "who are the customers that their mrr changed to 0 and previous month was >0. Don't use UPDATED_ATS, LAST_MRR_DOLLAR. limit to 10 top ones" | tee sample.md
+python -u snowchatcli.py -p "who are the customers that their mrr changed to 0 and previous month was >0. Don't use UPDATED_ATS, LAST_MRR_DOLLAR. limit to 10 top ones" | tee output.md
 ```
 
  Help

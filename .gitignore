@@ -1,6 +1,7 @@
 venv/
 .env
 .DS_Store
+output.md
 
 # Ignore Python cache files globally
 **/__pycache__/
