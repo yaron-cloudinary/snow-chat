@@ -1,0 +1,41 @@
+
+---PROMPT---
+which customer changed a segment in the last month?  how much arr did they contribute?  sort by arr.  show top 5 results. also indicate their primary segment, and plan segment.  include the account id.  Also all of the pricing info. 
+
+---SQL---
+SELECT 
+    ID AS account_id,
+    NAME,
+    (MRR_DOLLAR * 12) AS ARR,
+    SW_PRIMARY_INDUSTRY AS primary_segment,
+    PLAN_SEGMENT,
+    PLAN_TYPE,
+    UNIT_TYPE,
+    PLAN_DISPLAY_NAME,
+    PLAN_MONTHLY_PRICE,
+    SUBSCRIPTION_MONTHLY_PRICE,
+    FIRST_PAYING_PLAN_MONTHLY_PRICE,
+    LAST_PAYING_PLAN_MONTHLY_PRICE,
+    MAX_SUBSCRIPTION_MONTHLY_PRICE,
+    MAX_PLAN_MONTHLY_PRICE,
+    MAX_FEATURE_PLAN_MONTHLY_PRICE,
+    PAY_AS_YOU_GO,
+    PAYG_FEATURE_PLAN_MONTHLY_PRICE
+FROM 
+    dim.accounts
+WHERE 
+    LAST_MONTH_PLAN_SEGMENT <> PLAN_SEGMENT
+ORDER BY 
+    ARR DESC
+LIMIT 5;
+
+---DATA---
++--------------+---------------------+-------+------------------------------+----------------+---------------+-------------+----------------------------------------------+----------------------+------------------------------+-----------------------------------+----------------------------------+----------------------------------+--------------------------+----------------------------------+-----------------+-----------------------------------+
+|   ACCOUNT_ID | NAME                |   ARR | PRIMARY_SEGMENT              | PLAN_SEGMENT   | PLAN_TYPE     | UNIT_TYPE   | PLAN_DISPLAY_NAME                            |   PLAN_MONTHLY_PRICE |   SUBSCRIPTION_MONTHLY_PRICE |   FIRST_PAYING_PLAN_MONTHLY_PRICE |   LAST_PAYING_PLAN_MONTHLY_PRICE |   MAX_SUBSCRIPTION_MONTHLY_PRICE |   MAX_PLAN_MONTHLY_PRICE |   MAX_FEATURE_PLAN_MONTHLY_PRICE | PAY_AS_YOU_GO   |   PAYG_FEATURE_PLAN_MONTHLY_PRICE |
+|--------------+---------------------+-------+------------------------------+----------------+---------------+-------------+----------------------------------------------+----------------------+------------------------------+-----------------------------------+----------------------------------+----------------------------------+--------------------------+----------------------------------+-----------------+-----------------------------------|
+|       680225 | Castle Tech GmbH    | 94473 | Retail & Consumer Goods      | Premium        | Annual Units  | Units       | TMO Bucket - Paid Semi Annually              |                 4167 |                         4167 |                                99 |                             4167 |                             4167 |                     4167 |                            17559 | True            |                                 0 |
+|      4329444 | The Pokémon Company | 63744 | Retail & Consumer Goods      | Premium        | Annual Units  | Units       | Pokémon - 216 Annual Units - O               |                 5312 |                         5312 |                              5312 |                             5312 |                             5312 |                     5312 |                                0 | True            |                                 0 |
+|      2362274 | Yad Vashem          | 40224 | Travel & Recreation          | Premium        | Annual Units  | Units       | Yad Vashem - 500 Annual Units - Enterprise+  |                 3352 |                         3352 |                              3352 |                             3352 |                             3352 |                     3352 |                                0 | True            |                                 0 |
+|      2969260 | Blick Art Materials | 39996 | Media, Entertainment & Sport | Premium        | Annual Units  | Units       | Blick Art Materials - 150 Annual Units - TMO |                 3333 |                         3333 |                              3333 |                             3333 |                             3333 |                     3333 |                                0 | True            |                                 0 |
+|       421399 | Universum AG        | 38603 | Software & Technology        | Self Entry     | Monthly Units | Units       | Advanced Extra PAYG                          |                  549 |                          669 |                                49 |                              549 |                             1149 |                     1099 |                            17559 | True            |                                 0 |
++--------------+---------------------+-------+------------------------------+----------------+---------------+-------------+----------------------------------------------+----------------------+------------------------------+-----------------------------------+----------------------------------+----------------------------------+--------------------------+----------------------------------+-----------------+-----------------------------------+

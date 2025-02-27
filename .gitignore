@@ -1,0 +1,6 @@
+venv/
+.env
+# Ignore Python cache files globally
+**/__pycache__/
+**/*.pyc
+**/*.pyo
