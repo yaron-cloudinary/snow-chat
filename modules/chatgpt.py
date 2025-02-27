@@ -36,7 +36,7 @@ def query_chatgpt(question):
     response = client.chat.completions.create(
         model="gpt-4o",
         messages=messages,
-        max_tokens=500,
+        max_tokens=5000,
         temperature=0.7
     )
     return response
