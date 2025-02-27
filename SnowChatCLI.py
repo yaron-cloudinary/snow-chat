@@ -22,8 +22,8 @@ parser.add_argument('-ns', '--nosql', action='store_true', default=False, help='
 # Parse the arguments
 args = parser.parse_args()
 
-print("\n---PROMPT---")
-print (args.prompt)
+print("\n# PROMPT")
+print ('```\n',args.prompt, '\n```\n')
 
 if (os.getenv("USE_MOCK_SQL").lower() == "true"):
     sql = mocksql.get_mock_sql()
@@ -31,10 +31,10 @@ else:
     response = chatgpt.query_chatgpt(args.prompt)
     sql = chatgpt.extract_sql_blocks(response.choices[0].message.content)
 if (not args.nosql):
-    print("\n---SQL---")
-    print(sql)
+    print("\n# SQL")
+    print('```sql\n',sql, '\n```\n')
 (columns, results) = database.query_snowflake(sql)
-print("\n---DATA---")
-print(tabulate(results, headers=columns, tablefmt="psql"))  # Use "grid", "pretty", or "psql" format
+print("\n# DATA")
+print(tabulate(results, headers=columns, tablefmt="github"))  # Use "grid", "pretty", or "psql" format
 
 

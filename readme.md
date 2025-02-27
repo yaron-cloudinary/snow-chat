@@ -5,8 +5,11 @@ Welcome to SnowChat! This is a simple way to query snowflake using natural langa
 
 
 ## Installation
+```
+source venv/bin/activate
+pip install -r requirements.txt
+```
 
-TBD
 ### Configure
 Create the following .env folder in the root directory.
 ```
@@ -27,6 +30,11 @@ USE_MOCK_SQL="False"
 Example
 ```
 python SnowChatCLI.py -p "Who are the top 5 customers who increased their mrr since last month.  order by mrr increase."
+```
+
+Writing to a markup file
+```
+python -u snowchatcli.py -p "who are the customers that their mrr changed to 0 and previous month was >0. Don't use UPDATED_ATS, LAST_MRR_DOLLAR. limit to 10 top ones" | tee sample.md
 ```
 
  Help
