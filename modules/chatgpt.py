@@ -6,9 +6,9 @@ from string import Template
 
 def read_lookup_file_instructions(foldername, filename, template):
     with open(f'{foldername}/{filename}', 'r') as file:
-        column_name = filename.removesuffix(".csv")
+        placeholder = filename.removesuffix(".csv")
         templateObj = Template(template)
-        instructions = templateObj.substitute(column_name=column_name)
+        instructions = templateObj.substitute(filename=placeholder)
         return f"{instructions}\n{file.read()}\n"
 
 
@@ -31,15 +31,13 @@ def query_chatgpt(question):
         instructions = file.read()
 
 
-    with open('./schemas/dim.accounts.txt', 'r') as file:
-        dim_accounts = file.read()
-
     appendix = ""
-    appendix += read_lookup_folder_instructions('./lookup', "Where the ${column_name} is described in this csv:")
+    appendix += read_lookup_folder_instructions('./schemas', "Below is a list that describes the ${filename} database table.  Each row describes a column.   The first word is the database column name. Then it is followed by a column type. The rest of the row is a comment.  Not all have comments.  The comment describes the column.:")
+    appendix += read_lookup_folder_instructions('./lookup', "Where the ${filename} column is described in this csv:")
 
     # Define the conversation
     messages = [
-        {"role": "system", "content": f"{instructions}\n\nBelow are further instructions taht describe the schemas.\n\n{dim_accounts}\n\n{appendix}"},
+        {"role": "system", "content": f"{instructions}\n\nBelow are further instructions that describe the schemas.\n\n{appendix}"},
         {"role": "user", "content": f"{question}"},
 
     ]

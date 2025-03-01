@@ -1,6 +1,3 @@
-Below is a list that describes the dim.accounts database table.  Each row describes a column.   The first word is the database column name. Then it is followed by a column type. The rest of the row is a comment.  Not all have comments.  The comment describes the column.
-
-
 ID,"NUMBER(38,0)",,,
 NAME,VARCHAR(16777216),"The official name of the account, generated from the admin > sfdc > netsuite > top cloud  ",,
 CLOUD_NAME,VARCHAR(16777216),"Primary cloud of the account, sorted by bandwidth",,
