@@ -2,7 +2,22 @@ import openai
 import os
 import re
 import sys
+from string import Template
 
+def read_lookup_file_instructions(foldername, filename, template):
+    with open(f'{foldername}/{filename}', 'r') as file:
+        placeholder = filename.removesuffix(".csv")
+        templateObj = Template(template)
+        instructions = templateObj.substitute(filename=placeholder)
+        return f"{instructions}\n{file.read()}\n"
+
+
+def read_lookup_folder_instructions(foldername, template):
+    appendix = ""
+    for filename in os.listdir(foldername):
+        if filename.endswith(".csv"):
+            appendix += read_lookup_file_instructions(foldername, filename, template)
+    return appendix
 
 
 def query_chatgpt(question):
@@ -16,18 +31,13 @@ def query_chatgpt(question):
         instructions = file.read()
 
 
-    with open('./schemas/dim.accounts.txt', 'r') as file:
-        dim_accounts = file.read()
-
-    with open('./schemas/enum.customer_kinds.csv', 'r') as file:
-        enum_customer_kinds = file.read()
-
-    with open('./schemas/lookup.plan_segments.csv', 'r') as file:
-        lookup_plan_segments = file.read()
+    appendix = ""
+    appendix += read_lookup_folder_instructions('./schemas', "Below is a list that describes the ${filename} database table.  Each row describes a column.   The first word is the database column name. Then it is followed by a column type. The rest of the row is a comment.  Not all have comments.  The comment describes the column.:")
+    appendix += read_lookup_folder_instructions('./lookup', "Where the ${filename} column is described in this csv:")
 
     # Define the conversation
     messages = [
-        {"role": "system", "content": f"{instructions}\n\nBased on the following schema:\n\n{dim_accounts}\n\nWhere the customers_kinds are described in this csv:\n{enum_customer_kinds}\n\nAnd plan_segments are descibed here:\n{lookup_plan_segments}"},
+        {"role": "system", "content": f"{instructions}\n\nBelow are further instructions that describe the schemas.\n\n{appendix}"},
         {"role": "user", "content": f"{question}"},
 
     ]
@@ -39,7 +49,8 @@ def query_chatgpt(question):
         max_tokens=5000,
         temperature=0.7
     )
-    return response
+
+    return (messages, response)
 
 
 
