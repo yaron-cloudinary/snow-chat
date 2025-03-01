@@ -4,19 +4,19 @@ import re
 import sys
 from string import Template
 
-def read_lookup_file_instructions(foldername, filename, template):
+def read_file_instructions(foldername, filename, instruction_template):
     with open(f'{foldername}/{filename}', 'r') as file:
         placeholder = filename.removesuffix(".csv")
-        templateObj = Template(template)
+        templateObj = Template(instruction_template)
         instructions = templateObj.substitute(filename=placeholder)
         return f"{instructions}\n{file.read()}\n"
 
 
-def read_lookup_folder_instructions(foldername, template):
+def read_folder_instructions(foldername, instruction_template):
     appendix = ""
     for filename in os.listdir(foldername):
         if filename.endswith(".csv"):
-            appendix += read_lookup_file_instructions(foldername, filename, template)
+            appendix += read_file_instructions(foldername, filename, instruction_template)
     return appendix
 
 
@@ -26,14 +26,14 @@ def query_chatgpt(question):
     client = openai.OpenAI(api_key=api_key)
 
 
-    # Read the instruciton files of the file
+    # Read the instruciton files 
     with open('./instructions.txt', 'r') as file:
         instructions = file.read()
 
-
+    #Read additional instructions from the schemas and lookup folder
     appendix = ""
-    appendix += read_lookup_folder_instructions('./schemas', "Below is a list that describes the ${filename} database table.  Each row describes a column.   The first word is the database column name. Then it is followed by a column type. The rest of the row is a comment.  Not all have comments.  The comment describes the column.:")
-    appendix += read_lookup_folder_instructions('./lookup', "Where the ${filename} column is described in this csv:")
+    appendix += read_folder_instructions('./schemas', "Below is a list that describes the ${filename} database table.  Each row describes a column.   The first word is the database column name. Then it is followed by a column type. The rest of the row is a comment.  Not all have comments.  The comment describes the column.:")
+    appendix += read_folder_instructions('./lookup', "Where the ${filename} column is described in this csv:")
 
     # Define the conversation
     messages = [
